@@ -1,0 +1,30 @@
+# XBMC Media Center language file
+# Addon Name: Bumblebox
+# Addon id: script.helper.bumblebox
+# Addon version: 0.1.1
+# Addon Provider: Birger Jesch
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC-Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2017-07-01 15:45+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgctxt "#32100"
+msgid "no biography available"
+msgstr "Keine Biografie vorhanden"
+
+msgctxt "#32101"
+msgid "no album description available"
+msgstr "Keine Albumbeschreibung vorhanden"
+
+msgctxt "#32110"
+msgid "external IP (WAN)"
+msgstr "externe IP-Adresse (WAN)"

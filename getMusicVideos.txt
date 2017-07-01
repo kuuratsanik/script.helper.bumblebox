@@ -1,0 +1,7 @@
+idAlbum
+idArtist
+idTrack
+strDescriptionEN
+strMusicVid
+strTrack
+strTrackThumb

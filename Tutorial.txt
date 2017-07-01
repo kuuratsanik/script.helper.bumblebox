@@ -1,0 +1,30 @@
+Anstatt dem & Zeichen -> '&amp;' benutzen
+In Folgenden Dateien stehen die Key's der verschiedenen Abfragen
+
+    -getAlbumDetails.txt        Property 'Album_Info': 'yes|no',wenn Infos vorhanden/nicht vorhanden
+    -getArtistDetails.txt       Property 'Artist_Info': 'yes|no', wenn Artist-Bio vorhanden/nicht vorhanden
+    -getArtistDiscography.txt
+    -getMusicVideos.txt
+    -getTop10Tracks.txt
+    -getTrackDetails.txt
+    
+    
+getMusicDVD                     Nicht integriert
+/preview                        hinter Bild URL (200px)
+search Album by Albumname       Nicht integriert -> Funktioniert nicht
+
+RunScript(script.helper.bumblebox, module=audiodb_info&amp;request=getArtistDetails&amp;artistname=adele)
+
+    request=getArtistDetails
+        artistname
+        artistid
+        artistmbid
+
+    request=getAlbumDetails
+        artistname + albumname
+        albumid
+        albummbid
+    request=getTrackDetails
+        artistname + trackname
+        trackid
+        trackmbid
