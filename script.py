@@ -33,10 +33,18 @@ def NoneToStr(str):
 
 def GetJSONfromUrl(URL):
 
-    sock = urllib.urlopen(URL)
-    source = sock.read()
-    sock.close()
-    return json.loads(source)
+    v = 1
+    while True:
+        data = urllib.urlopen(URL)
+        try:
+            return json.loads(data.read())
+        except ValueError, e:
+            v += 1
+            if v > 5:
+                log('no data received: %s' % (e.message), xbmc.LOGERROR)
+                return False
+            log('no data received, wait 500 msec for %s. try' % (v))
+            xbmc.sleep(500)
 
 
 def setWindowProperties(property_name, property):
@@ -109,7 +117,7 @@ if __name__ == '__main__':
             elif 'artistmbid' in param:
                 _query = '/artist-mb.php?i=%s' % (param['artistmbid'])
             data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            getArtistDetails(data)
+            if data: getArtistDetails(data)
         elif param['request'] == 'getAlbumDetails':
             if 'artistname' in param and 'albumname' in param:
                 _query = '/searchalbum.php?s=%s&a=%s' % (param['artistname'], param['albumname'])
@@ -118,7 +126,7 @@ if __name__ == '__main__':
             elif 'albummbid' in param:
                 _query = '/album-mb.php?i=%s' % (param['albummbid'])
             data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            getAlbumDetails(data)
+            if data: getAlbumDetails(data)
         elif param['request'] == 'getTrackDetails':
             if 'artistname' in param and 'trackname' in param:
                 _query = '/searchtrack.php?s=%s&t=%s' % (param['artistname'], param['trackname'])
@@ -127,7 +135,7 @@ if __name__ == '__main__':
             elif 'trackmbid' in param:
                 _query = '/track-mb.php?i=%s' % (param['trackmbid'])
             data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            setWindowProperties('Track_', data['tack'])
+            if data: setWindowProperties('Track_', data['tack'])
         else:
             log('no API entry found for %s' % (param['request']))
 
