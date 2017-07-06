@@ -111,12 +111,7 @@ if __name__ == '__main__':
 
     _query = ''
     _addonHandle = None
-
-    try:
-        param = getParams(sys.argv)
-    except IndexError:
-        log('no additional parameters provided', level=xbmc.LOGFATAL)
-        sys.exit(0)
+    param = getParams(sys.argv)
 
     if param.get('module', '') == 'audiodb_info':
         log('processing module audioDB')
@@ -164,5 +159,6 @@ if __name__ == '__main__':
             xbmcgui.Dialog().notification(LS(32110), ext_ip)
         except RuntimeError:
             xbmcgui.Dialog().notification(LS(32110), ext_ip)
-
+    else:
+        log('no or incorrect module parameter provided', level=xbmc.LOGFATAL)
     log('script finished')
