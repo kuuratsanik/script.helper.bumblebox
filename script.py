@@ -23,8 +23,18 @@ def log(msg, level=xbmc.LOGDEBUG):
     xbmc.log('[%s] %s' % (addon_id, msg.encode('utf-8')), level)
 
 
-def getParams(url):
-    return dict(urlparse.parse_qsl(urlparse.urlsplit(url).query))
+def getParams(call):
+    log('script parameters: %s' % (str(call)))
+    params = {}
+    scheme = urlparse.urlsplit(call[0]).scheme
+    if scheme == '' or scheme == 'script':
+        params.update(dict(urlparse.parse_qsl(urlparse.urlsplit('%s?%s' % (call[0], call[1])).query)))
+    elif scheme == 'plugin':
+        params.update(dict(urlparse.parse_qsl(urlparse.urlsplit('%s%s' % (call[0], call[2])).query)))
+        params.update({'pluginHandle': call[1]})
+    else:
+        log('unknown scheme', level=xbmc.LOGFATAL)
+    return params
 
 
 def NoneToStr(str):
@@ -42,7 +52,7 @@ def GetJSONfromUrl(URL):
             v += 1
             if v > 5:
                 log('no data received: %s' % (e.message), xbmc.LOGERROR)
-                return False
+                return None
             log('no data received, wait 500 msec for %s. try' % (v))
             xbmc.sleep(500)
 
@@ -100,14 +110,15 @@ if __name__ == '__main__':
     xbmcgui.Window(WINDOW_ID).clearProperties()
 
     _query = ''
+    _addonHandle = None
 
     try:
-        param = getParams('script://%s?%s' % (sys.argv[0], sys.argv[1]))
+        param = getParams(sys.argv)
     except IndexError:
         log('no additional parameters provided', level=xbmc.LOGFATAL)
         sys.exit(0)
 
-    if param['module'] == 'audiodb_info':
+    if param.get('module', '') == 'audiodb_info':
         log('processing module audioDB')
         if param['request'] == 'getArtistDetails':
             if 'artistname' in param:
@@ -117,7 +128,7 @@ if __name__ == '__main__':
             elif 'artistmbid' in param:
                 _query = '/artist-mb.php?i=%s' % (param['artistmbid'])
             data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            if data: getArtistDetails(data)
+            if data is not None: getArtistDetails(data)
         elif param['request'] == 'getAlbumDetails':
             if 'artistname' in param and 'albumname' in param:
                 _query = '/searchalbum.php?s=%s&a=%s' % (param['artistname'], param['albumname'])
@@ -126,7 +137,7 @@ if __name__ == '__main__':
             elif 'albummbid' in param:
                 _query = '/album-mb.php?i=%s' % (param['albummbid'])
             data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            if data: getAlbumDetails(data)
+            if data is not None: getAlbumDetails(data)
         elif param['request'] == 'getTrackDetails':
             if 'artistname' in param and 'trackname' in param:
                 _query = '/searchtrack.php?s=%s&t=%s' % (param['artistname'], param['trackname'])
@@ -135,11 +146,11 @@ if __name__ == '__main__':
             elif 'trackmbid' in param:
                 _query = '/track-mb.php?i=%s' % (param['trackmbid'])
             data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            if data: setWindowProperties('Track_', data['tack'])
+            if data is not None: setWindowProperties('Track_', data['tack'])
         else:
             log('no API entry found for %s' % (param['request']))
 
-    elif param['module'] == 'wanip':
+    elif param.get('module', '') == 'wanip':
         """
         Complete  button with id 96 in SystemSettingsInfo.xml (near line 288) with 
         <onfocus>RunScript(script.helper.bumblebox, module=wanip)</onfocus>

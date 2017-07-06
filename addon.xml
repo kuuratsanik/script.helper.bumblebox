@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.helper.bumblebox" name="Bumblebox" version="0.1.2" provider-name="Birger Jesch">
+<addon id="script.helper.bumblebox" name="Bumblebox" version="0.1.3" provider-name="Birger Jesch">
 	<requires>
 		<import addon="xbmc.python" version="2.25.0"/>
 	</requires>
 	<extension point="xbmc.python.script" library="script.py">
         <provides>audio</provides>
 	</extension>
+	<extension point="xbmc.python.pluginsource" library="script.py">
+		<provides>audio</provides>
+	</extension>
+
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en_gb">Helpful tools for skin extensions</summary>
 		<summary lang="de_de">Nützliche Tools für Skin-Erweiterungen</summary>

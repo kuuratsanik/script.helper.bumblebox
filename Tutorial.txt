@@ -14,6 +14,7 @@ getMusicDVD                     Nicht integriert
 search Album by Albumname       Nicht integriert -> Funktioniert nicht
 
 RunScript(script.helper.bumblebox, module=audiodb_info&amp;request=getArtistDetails&amp;artistname=adele)
+<content>plugin://script.helper.bumblebox?module=audiodb_info&amp;request=getArtistDetails&amp;artistname=adele</content>
 
     request=getArtistDetails
         artistname
