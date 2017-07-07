@@ -1,6 +1,6 @@
 <h1>script.helper.bumblebox</h1>
 
-Die script.helper.bumblebox vereint diverse Datenbankabfragen und Skriptlets un einem Programm. Die Bubmlebox kann sowohl als Plugin als auch als Skript aus Kodi heraus gestartet werden. Das bietet die Möglichkeit, u.a. Listitems per Content-Methode dynamisch zu befüllen.
+Die script.helper.bumblebox vereint diverse Datenbankabfragen und Skriptlets in einem Programm. Die Bumblebox kann sowohl als Plugin als auch als Skript aus Kodi heraus gestartet werden. Das eröffnet die Möglichkeit, u.a. Listitems per Content-Methode dynamisch zu befüllen.
  
  
  <h2>Parameter:</h2>
