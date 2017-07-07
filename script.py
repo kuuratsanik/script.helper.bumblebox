@@ -7,6 +7,7 @@ import urlparse
 import xbmc
 import xbmcgui
 import xbmcaddon
+import xbmcplugin
 
 import json
 
@@ -58,30 +59,28 @@ def GetJSONfromUrl(URL):
 
 
 def setWindowProperties(property_name, property):
-    if property == None: return False
+
     for k, v in property[0].iteritems():
+        log('set Property %s to %s' % (property_name + k, NoneToStr(v)))
         xbmcgui.Window(WINDOW_ID).setProperty(property_name + k, NoneToStr(v))
     return True
 
-def getArtistDetails(data):
-    if setWindowProperties('Artist_', data['artists']):
-        pref_lang = 'strBiography%s' % (language)
+def getArtistDetails(data, handle):
+    pref_lang = 'strBiography%s' % (language)
+    li = xbmcgui.ListItem(label=data[0].get('strArtist', ''), label2=data[0].get('idArtist', ''),
+                          iconImage=data[0].get('strArtistThumb', ''))
 
-        if (pref_lang or 'strBiographyEN') in data['artists'][0]:
-            xbmcgui.Window(WINDOW_ID).setProperty('Artist_Info', 'yes')
-            try:
-                if NoneToStr(data['artists'][0][pref_lang]) != '':
-                    xbmcgui.Window(WINDOW_ID).setProperty('Artist_strBiography', data['artists'][0][pref_lang])
-                    log('found artist biography in preferred language')
-            except IndexError:
-                xbmcgui.Window(WINDOW_ID).setProperty('Artist_strBiography', NoneToStr(data['artists'][0]['strBiographyEN']))
-                log('found artist biography in EN only')
-        else:
-            xbmcgui.Window(WINDOW_ID).setProperty('Artist_strBiography', LS(32100))
-            log('no artist biography available')
-    else:
-        xbmcgui.Window(WINDOW_ID).setProperty('Artist_Info', 'no')
-        log('no artist biography available')
+    li.setArt({'icon': data[0].get('strArtistThumb', ''), 'banner': data[0].get('strArtistBanner', '')})
+    li.setProperty('Artist_strCountry', data[0].get('strCountry', ''))
+    li.setProperty('Artist_strArtistBanner', data[0].get('strArtistBanner', data[0].get('strArtistLogo', '')))
+    li.setProperty('Artist_strStyle', data[0].get('strStyle', ''))
+    li.setProperty('Artist_strCountry', data[0].get('strCountry', ''))
+    li.setProperty('Artist_intBornYear', data[0].get('intBornYear', ''))
+    li.setProperty('Artist_intFormedYear', data[0].get('intFormedYear', ''))
+    li.setProperty('Artist_strBiography', data[0].get(pref_lang, data[0].get('strBiographyEN', LS(32100))))
+    if handle is not None:
+        xbmcplugin.addDirectoryItem(handle=handle, url='', listitem=li)
+        xbmcplugin.endOfDirectory(handle, updateListing=True)
 
 def getAlbumDetails(data):
     if setWindowProperties('Album_', data['album']):
@@ -123,7 +122,12 @@ if __name__ == '__main__':
             elif 'artistmbid' in param:
                 _query = '/artist-mb.php?i=%s' % (param['artistmbid'])
             data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            if data is not None: getArtistDetails(data)
+            if data.get('artists', None) is not None:
+                getArtistDetails(data['artists'], param.get('pluginHandle', None))
+            else:
+                log('no artist info found', xbmc.LOGFATAL)
+            '''
+            
         elif param['request'] == 'getAlbumDetails':
             if 'artistname' in param and 'albumname' in param:
                 _query = '/searchalbum.php?s=%s&a=%s' % (param['artistname'], param['albumname'])
@@ -141,7 +145,9 @@ if __name__ == '__main__':
             elif 'trackmbid' in param:
                 _query = '/track-mb.php?i=%s' % (param['trackmbid'])
             data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            if data is not None: setWindowProperties('Track_', data['tack'])
+            if data is not None: setWindowProperties('Track_', data['track'])
+            
+            '''
         else:
             log('no API entry found for %s' % (param['request']))
 
