@@ -77,7 +77,7 @@ def getArtistDetails(data, handle):
     li.setProperty('Artist_strCountry', data[0].get('strCountry', ''))
     li.setProperty('Artist_intBornYear', data[0].get('intBornYear', ''))
     li.setProperty('Artist_intFormedYear', data[0].get('intFormedYear', ''))
-    li.setProperty('Artist_strBiography', data[0].get(pref_lang, data[0].get('strBiographyEN', LS(32100))))
+    li.setProperty('Artist_strBiography', data[0].get(pref_lang, data[0].get('strBiographyEN', None)) or LS(32100))
     xbmcgui.Window(WINDOW_ID).setProperty('Artist_Info', 'yes')
     if handle is not None:
         xbmcplugin.addDirectoryItem(handle=int(handle), url='', listitem=li)
