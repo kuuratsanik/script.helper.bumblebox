@@ -24,17 +24,17 @@ Die script.helper.bumblebox vereint diverse Datenbankabfragen und Skriptlets in 
 
 Der Aufruf per Content-Methode befüllt ein ListItem, das per Plugin-Handle von Kodi bereitgestellt wird. Folgende Items werden befüllt:
 
-ListItem.Label:                             strArtist (Künstlername)
-ListItem.Label2:                            idArtist (ID des Künstlers)
-ListItem.IconImage:                         strArtistThumb (Thumbnail)
-ListItem.Art(banner)                        strArtistBanner
-ListItem.Art(icon)                          strArtistThumb
-ListItem.Property(Artist_strStyle):         strStyle (Genre)
-ListItem.Property(Artist_strCountry):       strCountry (Herkunftsland/-ort)
-ListItem.Property(Artist_strArtistBanner):  strArtistBanner oder strArtistLogo (Banner zuerst)
-ListItem.Property(Artist_intBornYear):      intBornYear (Geburtsjahr)
-ListItem.Property(Artist_intFormedYear):    intFormedYear (bekannt seit)
-ListItem.Property(Artist_strBiography):     strBiography[eingestellte Sprache] oder strBiographyEN oder 'not found'
+    ListItem.Label:                             strArtist (Künstlername)
+    ListItem.Label2:                            idArtist (ID des Künstlers)
+    ListItem.IconImage:                         strArtistThumb (Thumbnail)
+    ListItem.Art(banner)                        strArtistBanner
+    ListItem.Art(icon)                          strArtistThumb
+    ListItem.Property(Artist_strStyle):         strStyle (Genre)
+    ListItem.Property(Artist_strCountry):       strCountry (Herkunftsland/-ort)
+    ListItem.Property(Artist_strArtistBanner):  strArtistBanner oder strArtistLogo (Banner zuerst)
+    ListItem.Property(Artist_intBornYear):      intBornYear (Geburtsjahr)
+    ListItem.Property(Artist_intFormedYear):    intFormedYear (bekannt seit)
+    ListItem.Property(Artist_strBiography):     strBiography[eingestellte Sprache] oder strBiographyEN oder 'not found'
 
 <h3>Implementierte Module:</h3>
 
