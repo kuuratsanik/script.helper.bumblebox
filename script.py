@@ -67,21 +67,24 @@ def setWindowProperties(property_name, property):
 
 def getArtistDetails(data, handle):
     pref_lang = 'strBiography%s' % (language)
-    li = xbmcgui.ListItem(label=data[0].get('strArtist', ''), label2=data[0].get('idArtist', ''),
-                          iconImage=data[0].get('strArtistThumb', ''))
+    try:
+        li = xbmcgui.ListItem(label=data[0].get('strArtist', ''), label2=data[0].get('idArtist', ''),
+                              iconImage=data[0].get('strArtistThumb', ''))
 
-    li.setArt({'icon': data[0].get('strArtistThumb', ''), 'banner': data[0].get('strArtistBanner', '')})
-    li.setProperty('Artist_strCountry', data[0].get('strCountry', ''))
-    li.setProperty('Artist_strArtistBanner', data[0].get('strArtistBanner', data[0].get('strArtistLogo', '')))
-    li.setProperty('Artist_strStyle', data[0].get('strStyle', ''))
-    li.setProperty('Artist_strCountry', data[0].get('strCountry', ''))
-    li.setProperty('Artist_intBornYear', data[0].get('intBornYear', ''))
-    li.setProperty('Artist_intFormedYear', data[0].get('intFormedYear', ''))
-    li.setProperty('Artist_strBiography', data[0].get(pref_lang, data[0].get('strBiographyEN', None)) or LS(32100))
-    xbmcgui.Window(WINDOW_ID).setProperty('Artist_Info', 'yes')
-    if handle is not None:
-        xbmcplugin.addDirectoryItem(handle=int(handle), url='', listitem=li)
-        xbmcplugin.endOfDirectory(int(handle), updateListing=True)
+        li.setArt({'icon': data[0].get('strArtistThumb', ''), 'banner': data[0].get('strArtistBanner', '')})
+        li.setProperty('Artist_strCountry', data[0].get('strCountry', ''))
+        li.setProperty('Artist_strArtistBanner', data[0].get('strArtistBanner', data[0].get('strArtistLogo', '')))
+        li.setProperty('Artist_strStyle', data[0].get('strStyle', ''))
+        li.setProperty('Artist_strCountry', data[0].get('strCountry', ''))
+        li.setProperty('Artist_intBornYear', data[0].get('intBornYear', ''))
+        li.setProperty('Artist_intFormedYear', data[0].get('intFormedYear', ''))
+        li.setProperty('Artist_strBiography', data[0].get(pref_lang, data[0].get('strBiographyEN', None)) or LS(32100))
+        xbmcgui.Window(WINDOW_ID).setProperty('Artist_Info', 'yes')
+        if handle is not None:
+            xbmcplugin.addDirectoryItem(handle=int(handle), url='', listitem=li)
+            xbmcplugin.endOfDirectory(int(handle), updateListing=True)
+    except TypeError:
+        log('not all attributes defined', xbmc.LOGERROR)
 
 def getAlbumDetails(data):
     if setWindowProperties('Album_', data['album']):
@@ -109,25 +112,30 @@ if __name__ == '__main__':
     log('language is %s' % (language))
     xbmcgui.Window(WINDOW_ID).clearProperties()
 
-    _query = ''
+    _query = None
     _addonHandle = None
+    data = None
     param = getParams(sys.argv)
 
     if param.get('module', '') == 'audiodb_info':
         log('processing module audioDB')
         if param['request'] == 'getArtistDetails':
-            if 'artistname' in param:
+            if 'artistname' in param and param['artistname'] != '':
                 _query = '/search.php?s=%s' % (param['artistname'])
-            elif 'artistid' in param:
+            elif 'artistid' in param and param['artistid'] != '':
                 _query = '/artist.php?i=%s' % (param['artistid'])
-            elif 'artistmbid' in param:
+            elif 'artistmbid' in param and param['artistmbid'] != '':
                 _query = '/artist-mb.php?i=%s' % (param['artistmbid'])
-            data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            if data.get('artists', None) is not None:
-                getArtistDetails(data['artists'], param.get('pluginHandle', None))
+            if _query is not None:
+                data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
+                if data is not None:
+                    getArtistDetails(data['artists'], param.get('pluginHandle', None))
+                else:
+                    xbmcgui.Window(WINDOW_ID).setProperty('Artist_Info', 'no')
+                    log('no artist info found', xbmc.LOGFATAL)
             else:
                 xbmcgui.Window(WINDOW_ID).setProperty('Artist_Info', 'no')
-                log('no artist info found', xbmc.LOGFATAL)
+                log('invalid query', xbmc.LOGFATAL)
             '''
             
         elif param['request'] == 'getAlbumDetails':
