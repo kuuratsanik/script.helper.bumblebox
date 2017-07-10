@@ -7,18 +7,19 @@ Die script.helper.bumblebox vereint diverse Datenbankabfragen und Skriptlets in 
  
  <h3>Implementierte Module:</h3>
  
-     module=audiodb_info        Datenbankabfrage in http://www.theaudiodb.info
-     request=getArtistDetails   holt Informationen zum Künstler
+    module=audiodb_info        Datenbankabfrage in http://www.theaudiodb.info
+    request=getArtistDetails   holt Informationen zum Künstler
 
-     artistname='Adele'         über den Namen oder
-     artistid='08154711'        der Künstler-ID oder
-     artistmbid='333'           der MB-ID
- 
+    artistname='Adele'         über den Namen oder
+    artistid='08154711'        der Künstler-ID oder
+    artistmbid='333'           der MB-ID
+
  <h4>Aufruf per Script-Methode:</h4>
  
     RunScript(script.helper.bumblebox, module=audiodb_info&amp;request=getArtistDetails&amp;artistname='Adele')
  
  <h4>Aufruf per Content-Methode (Plugin)</h4>
+ <h4>Details zum Künstler/Interpreten</h4>
  
     <content>plugin://script.helper.bumblebox?module=audiodb_info&amp;request=getArtistDetails&amp;artistname='Adele'</content>
 
@@ -35,6 +36,31 @@ Der Aufruf per Content-Methode befüllt ein ListItem, das per Plugin-Handle von 
     ListItem.Property(Artist_intBornYear):      intBornYear (Geburtsjahr)
     ListItem.Property(Artist_intFormedYear):    intFormedYear (bekannt seit)
     ListItem.Property(Artist_strBiography):     strBiography[eingestellte Sprache] oder strBiographyEN oder 'not found'
+
+<h4>Details zum Album</h4>
+
+    <content>plugin://script.helper.bumblebox?module=audiodb_info&amp;request=getAlbumDetails&amp;artistname='A-ha'&amp;albumname='Lifelines'</content>
+
+Der Aufruf per Content-Methode befüllt ein ListItem, das per Plugin-Handle von Kodi bereitgestellt wird. Folgende Items werden befüllt:
+
+    ListItem.Label:                                 strAlbum (Album)
+    ListItem.Label2:                                idArtist
+    ListItem.IconImage:                             strAlbumThumb
+
+    ListItem.Property('intYearReleased'):           intYearReleased (Erscheinungsjahr)
+    ListItem.Property('strAlbumCDart'):
+    ListItem.Property('strAlbumSpine'):
+    ListItem.Property('strAlbumThumbBack'):
+    ListItem.Property('strDescriptionDE'):          Beschreibung deutsch oder
+    ListItem.Property('strDescriptionEN'):          Beschreibung Englisch
+    ListItem.Property('strGenre'):
+    ListItem.Property('strLabel'):
+    ListItem.Property('strLocation'):
+    ListItem.Property('strMood'):
+    ListItem.Property('strReleaseFormat'):
+    ListItem.Property('strSpeed'):
+    ListItem.Property('strStyle'):
+
 
 <h3>Implementierte Module:</h3>
 

@@ -84,26 +84,30 @@ def getArtistDetails(data, handle):
             xbmcplugin.addDirectoryItem(handle=int(handle), url='', listitem=li)
             xbmcplugin.endOfDirectory(int(handle), updateListing=True)
     except TypeError:
-        log('not all attributes defined', xbmc.LOGERROR)
+        log('not all atrist attributes defined', xbmc.LOGERROR)
 
-def getAlbumDetails(data):
-    if setWindowProperties('Album_', data['album']):
-        pref_lang = 'strDescription%s' % (language)
-        if (pref_lang or 'strDescriptionEN') in data['album'][0]:
-            xbmcgui.Window(WINDOW_ID).setProperty('Album_Info', 'yes')
-            try:
-                if NoneToStr(data['album'][0][pref_lang]) != '':
-                    xbmcgui.Window(WINDOW_ID).setProperty('Album_strDescription', data['album'][0][pref_lang])
-                    log('found album description in preferred language')
-            except IndexError:
-                xbmcgui.Window(WINDOW_ID).setProperty('Album_strDescription', NoneToStr(data['album'][0]['strDescriptionEN']))
-                log('found album description in EN only')
-        else:
-            xbmcgui.Window(WINDOW_ID).setProperty('Album_strDescription', LS(32101))
-            log('no album description available')
-    else:
-        xbmcgui.Window(WINDOW_ID).setProperty('Album_Info', 'no')
-        log('no album description available')
+def getAlbumDetails(data, handle):
+    pref_lang = 'strDescription%s' % (language)
+    try:
+        li = xbmcgui.ListItem(label=data[0].get('strAlbum', ''), label2=data[0].get('idAlbum', ''),
+                              iconImage=data[0].get('strAlbumThumb'))
+
+        li.setProperty('Album_intYearReleased', data[0].get('intYearReleased', ''))
+        li.setProperty('Album_strAlbumCDArt', data[0].get('strAlbumCDart', ''))
+        li.setProperty('Album_strAlbumSpine', data[0].get('strAlbumSpine', ''))
+        li.setProperty('Album_strAlbumThumbBack', data[0].get('strAlbumThumbBack', ''))
+        li.setProperty('Album_strGenre', data[0].get('strGenre', ''))
+        li.setProperty('Album_strStyle', data[0].get('strStyle', ''))
+        li.setProperty('Album_strLocation', data[0].get('strLocation', ''))
+        li.setProperty('Album_strMood', data[0].get('strMood', ''))
+        li.setProperty('Album_strReleaseFormat', data[0].get('strReleaseFormat', ''))
+        li.setProperty('Album_strSpeed', data[0].get('strSpeed', ''))
+        li.setProperty('Album_strDescription', data[0].get(pref_lang, data[0].get('strDescriptionEN', None)) or LS(32101))
+        if handle is not None:
+            xbmcplugin.addDirectoryItem(handle=int(handle), url='', listitem=li)
+            xbmcplugin.endOfDirectory(int(handle), updateListing=True)
+    except TypeError:
+        log('not all album attributes defined', xbmc.LOGERROR)
 
 if __name__ == '__main__':
 
@@ -136,17 +140,26 @@ if __name__ == '__main__':
             else:
                 xbmcgui.Window(WINDOW_ID).setProperty('Artist_Info', 'no')
                 log('invalid query', xbmc.LOGFATAL)
-            '''
-            
+
         elif param['request'] == 'getAlbumDetails':
-            if 'artistname' in param and 'albumname' in param:
+            if 'artistname' in param and 'albumname' in param and (param['artistname'] != '' or param['albumname'] != ''):
                 _query = '/searchalbum.php?s=%s&a=%s' % (param['artistname'], param['albumname'])
-            elif 'albumid' in param:
+            elif 'albumid' in param and param['albumid'] != '':
                 _query = '/album.php?m=%s' % (param['albumid'])
-            elif 'albummbid' in param:
+            elif 'albummbid' in param and param['albummbid'] != '':
                 _query = '/album-mb.php?i=%s' % (param['albummbid'])
-            data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
-            if data is not None: getAlbumDetails(data)
+            if _query is not None:
+                data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
+                if data is not None:
+                    getAlbumDetails(data['album'], param.get('pluginHandle', None))
+                else:
+                    xbmcgui.Window(WINDOW_ID).setProperty('Album_Info', 'no')
+                    log('no album info found', xbmc.LOGFATAL)
+            else:
+                xbmcgui.Window(WINDOW_ID).setProperty('Album_Info', 'no')
+                log('invalid query', xbmc.LOGFATAL)
+
+            '''
         elif param['request'] == 'getTrackDetails':
             if 'artistname' in param and 'trackname' in param:
                 _query = '/searchtrack.php?s=%s&t=%s' % (param['artistname'], param['trackname'])
@@ -157,9 +170,9 @@ if __name__ == '__main__':
             data = GetJSONfromUrl('%s/%s%s' % (AUDIO_DB, API_Key, _query))
             if data is not None: setWindowProperties('Track_', data['track'])
             
-            '''
         else:
             log('no API entry found for %s' % (param['request']))
+            '''
 
     elif param.get('module', '') == 'wanip':
         """

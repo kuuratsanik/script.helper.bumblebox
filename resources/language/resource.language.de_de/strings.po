@@ -23,7 +23,7 @@ msgstr "Keine Biografie vorhanden"
 
 msgctxt "#32101"
 msgid "no album description available"
-msgstr "Keine Albumbeschreibung vorhanden"
+msgstr "Keine Beschreibung des Albums vorhanden"
 
 msgctxt "#32110"
 msgid "external IP (WAN)"
