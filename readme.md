@@ -47,19 +47,19 @@ Der Aufruf per Content-Methode befüllt ein ListItem, das per Plugin-Handle von 
     ListItem.Label2:                                idArtist
     ListItem.IconImage:                             strAlbumThumb
 
-    ListItem.Property('intYearReleased'):           intYearReleased (Erscheinungsjahr)
-    ListItem.Property('strAlbumCDart'):
-    ListItem.Property('strAlbumSpine'):
-    ListItem.Property('strAlbumThumbBack'):
-    ListItem.Property('strDescriptionDE'):          Beschreibung deutsch oder
-    ListItem.Property('strDescriptionEN'):          Beschreibung Englisch
-    ListItem.Property('strGenre'):
-    ListItem.Property('strLabel'):
-    ListItem.Property('strLocation'):
-    ListItem.Property('strMood'):
-    ListItem.Property('strReleaseFormat'):
-    ListItem.Property('strSpeed'):
-    ListItem.Property('strStyle'):
+    ListItem.Property('Album_intYearReleased'):     intYearReleased (Erscheinungsjahr)
+    ListItem.Property('Album_strAlbumCDart'):
+    ListItem.Property('Album_strAlbumSpine'):
+    ListItem.Property('Album_strAlbumThumbBack'):
+    ListItem.Property('Album_strDescriptionDE'):    Beschreibung deutsch oder
+    ListItem.Property('Album_strDescriptionEN'):    Beschreibung Englisch
+    ListItem.Property('Album_strGenre'):
+    ListItem.Property('Album_strLabel'):
+    ListItem.Property('Album_strLocation'):
+    ListItem.Property('Album_strMood'):
+    ListItem.Property('Album_strReleaseFormat'):
+    ListItem.Property('Album_strSpeed'):
+    ListItem.Property('Album_strStyle'):
 
 
 <h3>Implementierte Module:</h3>
